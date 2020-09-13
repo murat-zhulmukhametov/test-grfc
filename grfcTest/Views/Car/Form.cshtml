@@ -1,0 +1,164 @@
+﻿@model grfcTest.Models.Cars.CreateEdit.CarEditModel
+
+
+<style>
+    .control {
+        margin-bottom: 6px;
+    }
+
+    .work {
+
+    }
+    
+    .work-select{
+
+    }
+</style>
+
+<body>
+@if (Model.Id.HasValue)
+{
+    <h2>Редактирование информации об обслуживании автомобиля</h2>
+}
+else
+{
+    <h2>Добавление информации об обслуживании автомобиля</h2>
+}
+
+@using (Html.BeginForm(Model.Id.HasValue ? "Edit" : "Create", "Car", null, FormMethod.Post, new {autocomplete = "off"}))
+{
+    <div class="control">
+        <p>Марка</p>
+        @Html.TextBoxFor(x => x.Form.Brand)
+    </div>
+    <div class="control">
+        <p>Модель</p>
+        @Html.TextBoxFor(x => x.Form.Model)
+    </div>
+    <div class="control">
+        <p>Гос. номер</p>
+        @Html.TextBoxFor(x => x.Form.Number)
+    </div>
+    <div class="control">
+        <p>Тип двигателя</p>
+        @Html.DropDownListFor(x => x.Form.EngineType, Model.EngineTypesList)
+    </div>
+
+    <h2>Работы проводимые над автомобилем</h2>
+
+    <div id="works">
+        <div id="stored">
+            @foreach (var work in Model.Form.Works)
+            {
+                <div class="work" id="@work.Id">
+                        <p>Дата обслуживания</p>
+                        <input type="datetime" value="@work.Date"/>
+                        <p>Тип работ</p>
+                        @Html.DropDownListFor(x => x.Form.Works[Model.Form.Works.IndexOf(work)], new List<SelectListItem>(), new { @class="work-select" })
+                        <a href="javascript:" onclick="deleteWork('@work.Id')">Удалить </a>
+                </div>
+            }
+        </div>
+        <div id="new"></div>
+    </div>
+
+    <div>
+        <input type="button" id="add-work" value="Добавить проделанную работу"/>
+    </div>
+
+    <input id="form-submit" type="button" value="Сохранить" />
+    <a href="@Url.Action(@Model.Id.HasValue? "Item" : "List",new {Model.Id})">Отмена</a>
+}
+</body>
+<script>
+    var worksCount = @Model.Form.Works.Count;
+
+    function deleteWork(workId) {
+        $('#' + workId).empty();
+    }
+
+    $('#add-work').on('click',
+        function() {
+            $('#new').append("<div class=\"work\" id=" +
+                worksCount +
+                ">" +
+                "<p>Дата обслуживания</p>" +
+                "<input type=\"datetime-local\"/>" +
+                "<p>Тип работ</p>" +
+                "<select class=\"work-select\"></select>" +
+                "<a href=\"javascript:\" onclick=\"deleteWork('" +
+                worksCount +
+                "')\">Удалить </a>" +
+                "</div > ");
+
+            var engineValue = $('#Form_EngineType').val();
+            setSelect(engineValue);
+            worksCount++;
+        });
+
+    function setSelect(value) {
+        var list = $.get("/Car/GetWorks?type=" + value).then(function(data) {
+            $('.work-select').empty();
+            for (var i = 0; i < data.length; i++) {
+                $('.work-select').append('<option value = "' + data[i].Value + '">' + data[i].Text + '</option>');
+            }
+            console.log(data);
+        });
+    }
+
+    $('#Form_EngineType').on('change',
+        function() {
+            var value = $(this).val();
+            setSelect(value);
+        });
+
+    $('#form-submit').on('click',
+        function() {
+            var brand = $('#Form_Brand').val();
+            var model = $('#Form_Model').val();
+            var number = $('#Form_Number').val();
+            var engineType = $('#Form_EngineType').val();
+
+            var works = [];
+
+            $('#works .work').each(function() {
+                var date = $(this).find('input').val();
+                var workSelect = $(this).find('.work-select').val();
+
+                var workObj = {
+                    WorkId: workSelect,
+                    Date: date
+                }
+
+                works.push(workObj);
+
+                console.log(workObj);
+            });
+
+            var form = {
+                Brand: brand,
+                Model: model,
+                Number: number,
+                EngineType: engineType,
+                Works: works
+            };
+
+            var postUrl = "/Car/Create";
+
+            if ('@Model.Id.HasValue' === 'True') {
+                postUrl = "/Car/Edit";
+            }
+
+            var id = '@Model.Id';
+
+            $.ajax({
+                url: postUrl,
+                type: "POST",
+                data: { id: id, form: form },
+                success: function(data) {
+                    alert('cool');
+                }
+            });
+            console.log(form);
+        });
+</script>

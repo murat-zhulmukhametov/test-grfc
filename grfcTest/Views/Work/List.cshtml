@@ -1,0 +1,46 @@
+﻿@model grfcTest.Models.Works.List.WorkListModel
+
+<style>
+    table{
+        margin: 16px 16px;
+        border: 1px solid black;
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 10px;
+    }
+</style>
+
+<body>
+<h2>Список работ для авто</h2>
+<table>
+    <thead>
+    <tr>
+        <td>Описание</td>
+        <td>Тип двигателя</td>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Works.Any())
+    {
+        foreach (var work in Model.Works)
+        {
+            <tr>
+                <td>@Html.ActionLink(@work.Description, "Item", "Work", new {work.Id}, null)</td>
+                <td>@work.EngineType</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td>Нет данных</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+@Html.ActionLink("Добавить", "Create", "Work")
+</body>

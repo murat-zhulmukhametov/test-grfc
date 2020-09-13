@@ -1,0 +1,27 @@
+﻿@model grfcTest.Models.Works.CreateEdit.WorkEditModel
+    
+
+<body>
+@if (Model.Id.HasValue)
+{
+    <h2>Редактирование работы</h2>
+}
+else
+{
+    <h2>Добавление новой работы</h2>
+}
+
+@using (Html.BeginForm(Model.Id.HasValue ? "Edit" : "Create", "Work", null, FormMethod.Post, new {autocomplete = "off"}))
+{
+    <div style="margin-bottom: 6px">
+        <p>Описание</p>
+        @Html.TextBoxFor(x => x.Form.Description)
+    </div>
+    <div style="margin-bottom: 18px">
+        <p>Тип двигателя</p>
+        @Html.DropDownListFor(x => x.Form.EngineType, Model.EngineTypesList)
+    </div>
+    <input type="submit" value="Сохранить" />
+    <a href="@Url.Action(@Model.Id.HasValue? "Item" : "List",new {Model.Id})">Отмена</a>
+}
+</body>

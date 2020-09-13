@@ -1,0 +1,49 @@
+﻿@model grfcTest.Models.Cars.List.CarListModel
+
+
+<style>
+    table {
+        margin: 16px 16px;
+        border: 1px solid black;
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 10px;
+    }
+</style>
+
+<body>
+    <h2>Список работ для авто</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>Марка</td>
+                <td>Модель</td>
+                <td>Гос. номер</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Cars.Any())
+            {
+                foreach (var car in Model.Cars)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(car.Brand, "Item", "Car", new { car.Id }, null)</td>
+                        <td>@car.Model</td>
+                        <td>@car.Number</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>Нет данных</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    @Html.ActionLink("Добавить", "Create", "Car")
+</body>

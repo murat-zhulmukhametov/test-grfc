@@ -1,0 +1,13 @@
+﻿@model grfcTest.Models.Works.Item.WorkItemModel
+
+    <body>
+
+        <h2>Карточка работы</h2>
+
+        <p>Описание: @Model.Description</p>
+        <p>Тип двигателя: @Model.EngineType</p>
+
+        @Html.ActionLink("Изменить", "Edit", "Work", new { Model.Id }, null)
+        @Html.ActionLink("Назад", "List", "Work")
+
+    </body>

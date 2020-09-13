@@ -1,0 +1,46 @@
+﻿@model grfcTest.Models.Cars.Item.CarItemModel
+
+<style>
+    table{
+        margin-top: 16px;
+        border: 1px solid black;
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 8px;
+    }
+</style>
+<body>
+
+<h2>Карточка обслуживания автомобиля</h2>
+
+<p>Марка: @Model.Brand</p>
+<p>Модель: @Model.Model</p>
+<p>Гос. номер: @Model.Number</p>
+<p>Тип двигателя: @Model.EngineType</p>
+
+<h2>Работы проводимые над автомобилем</h2>
+    
+<table>
+    <thead>
+    <tr>
+        <td>Описание работ</td>
+        <td>Дата</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var work in Model.Works)
+    {
+        <tr>
+            <td>@work.Description</td>
+            <td>@work.Date</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Html.ActionLink("Изменить", "Edit", "Car", new { Model.Id }, null)
+@Html.ActionLink("Назад", "List", "Car")
+
+</body>
