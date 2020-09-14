@@ -10,6 +10,16 @@
         border: 1px solid black;
         padding: 8px;
     }
+
+    .content-buttons{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container {
+        display: block;
+        width: 300px;
+    }
 </style>
 <body>
 
@@ -39,8 +49,12 @@
     }
     </tbody>
 </table>
-
-@Html.ActionLink("Изменить", "Edit", "Car", new { Model.Id }, null)
-@Html.ActionLink("Назад", "List", "Car")
-
+    
+<div class="button-container">
+    <div class="content-buttons">
+        @Html.ActionLink("Изменить", "Edit", "Car", new { Model.Id }, null)
+        @Html.ActionLink("Удалить", "Delete", "Car", new { Model.Id }, null)
+        @Html.ActionLink("Назад", "List", "Car")
+    </div>
+</div>
 </body>

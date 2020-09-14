@@ -29,7 +29,7 @@ namespace grfcTest.Models.Cars.CreateEdit
 
             foreach (var work in form.Works)
             {
-                var link = carWorkLinkFactory.Create(car.Id, work.Id, work.Date);
+                var link = carWorkLinkFactory.Create(car.Id, work.WorkId, work.Date);
 
                 entityRepository.InsertOnSave(link);
             }
@@ -54,7 +54,7 @@ namespace grfcTest.Models.Cars.CreateEdit
 
             foreach (var work in form.Works)
             {
-                var link = carWorkLinkFactory.Create(car.Id, work.Id, work.Date);
+                var link = carWorkLinkFactory.Create(car.Id, work.WorkId, work.Date);
 
                 entityRepository.InsertOnSave(link);
             }

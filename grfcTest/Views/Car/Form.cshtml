@@ -7,9 +7,13 @@
     }
 
     .work {
-
+        margin-bottom: 12px;
     }
     
+    .work a {
+        margin-top: 6px;
+    }
+
     .work-select{
 
     }
@@ -50,19 +54,20 @@ else
         <div id="stored">
             @foreach (var work in Model.Form.Works)
             {
-                <div class="work" id="@work.Id">
-                        <p>Дата обслуживания</p>
-                        <input type="datetime" value="@work.Date"/>
-                        <p>Тип работ</p>
-                        @Html.DropDownListFor(x => x.Form.Works[Model.Form.Works.IndexOf(work)], new List<SelectListItem>(), new { @class="work-select" })
-                        <a href="javascript:" onclick="deleteWork('@work.Id')">Удалить </a>
-                </div>
+            <div class="work" id="@work.Id">
+                <p>Дата обслуживания</p>
+                <input type="datetime" value="@work.Date" />
+                <p>Тип работ</p>
+                @Html.DropDownListFor(x => x.Form.Works[Model.Form.Works.IndexOf(work)],  new SelectList(Model.WorksList, "Value", "Text", work.WorkId.ToString()), new { @class = "work-select" })
+                <a href="javascript:" onclick="deleteWork('@work.Id')">Удалить </a>
+                <hr />
+            </div>
             }
         </div>
         <div id="new"></div>
     </div>
 
-    <div>
+    <div style="margin-bottom: 18px;">
         <input type="button" id="add-work" value="Добавить проделанную работу"/>
     </div>
 
@@ -89,6 +94,7 @@ else
                 "<a href=\"javascript:\" onclick=\"deleteWork('" +
                 worksCount +
                 "')\">Удалить </a>" +
+                "<hr/>" +
                 "</div > ");
 
             var engineValue = $('#Form_EngineType').val();
@@ -97,12 +103,15 @@ else
         });
 
     function setSelect(value) {
-        var list = $.get("/Car/GetWorks?type=" + value).then(function(data) {
-            $('.work-select').empty();
-            for (var i = 0; i < data.length; i++) {
-                $('.work-select').append('<option value = "' + data[i].Value + '">' + data[i].Text + '</option>');
-            }
-            console.log(data);
+        $.get("/Car/GetWorks?type=" + value).then(function (data) {
+            $('.work-select').each(function () {
+                if ($(this).val() === 'null' || $(this).has('option').length === 0) {
+                    $(this).empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $(this).append('<option value = "' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+                }
+            });
         });
     }
 
@@ -131,8 +140,6 @@ else
                 }
 
                 works.push(workObj);
-
-                console.log(workObj);
             });
 
             var form = {
@@ -155,10 +162,10 @@ else
                 url: postUrl,
                 type: "POST",
                 data: { id: id, form: form },
-                success: function(data) {
-                    alert('cool');
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.redirect);
                 }
             });
-            console.log(form);
         });
 </script>

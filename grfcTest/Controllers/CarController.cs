@@ -4,6 +4,7 @@ using grfcTest.Models.Cars.List;
 using System;
 using System.Web.Mvc;
 using grfcTest.DataLayer.Common;
+using grfcTest.Models.Cars.Delete;
 using grfcTest.Models.Works.SelectList;
 
 namespace grfcTest.Controllers
@@ -16,13 +17,15 @@ namespace grfcTest.Controllers
         private readonly ICarValidator carValidator;
         private readonly ICarFormHandler carFormHandler;
         private readonly IWorkSelectListModelBuilder workSelectListModelBuilder;
+        private readonly ICarDeleteHandler carDeleteHandler;
 
         public CarController(ICarListModelBuilder carListModelBuilder,
             ICarItemModelBuilder carItemModelBuilder,
             ICarEditModelBuilder carEditModelBuilder,
             ICarValidator carValidator,
             ICarFormHandler carFormHandler, 
-            IWorkSelectListModelBuilder workSelectListModelBuilder)
+            IWorkSelectListModelBuilder workSelectListModelBuilder, 
+            ICarDeleteHandler carDeleteHandler)
         {
             this.carListModelBuilder = carListModelBuilder;
             this.carItemModelBuilder = carItemModelBuilder;
@@ -30,6 +33,7 @@ namespace grfcTest.Controllers
             this.carValidator = carValidator;
             this.carFormHandler = carFormHandler;
             this.workSelectListModelBuilder = workSelectListModelBuilder;
+            this.carDeleteHandler = carDeleteHandler;
         }
 
         public ActionResult List()
@@ -80,6 +84,13 @@ namespace grfcTest.Controllers
             }
 
             return View("Form", carEditModelBuilder.BuildByForm(id, form));
+        }
+
+        [HttpGet]
+        public ActionResult Delete(Guid id)
+        {
+            carDeleteHandler.HandleDelete(id);
+            return RedirectToAction("List");
         }
 
         public JsonResult GetWorks(EngineType type)
